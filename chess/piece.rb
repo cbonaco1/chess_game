@@ -6,9 +6,10 @@ class Piece
   attr_accessor :position
   attr_reader :board
 
-  def initialize(position, board)
+  def initialize(position, board, color)
     @position = position
     @board = board
+    @color = color
   end
 
   #Returns an array of possible locations it can go to
@@ -195,11 +196,16 @@ class Knight < SteppingPiece
       path = []
       row_ops = move.first
       col_ops = move.last
+
+      #This is the number you will be adding to current rows/cols
+      #1 or -1
       row_factor = (row_ops <=> 0)
       col_factor = (col_ops <=> 0)
+
       row_num = current_row
       col_num = current_column
 
+      #Add the factor to rows/cols
       (row_ops.abs).times do
         row_num += row_factor
         next if row_num < 0
@@ -265,19 +271,20 @@ class Pawn < Piece
   #Can move two steps on first move
   def moves
     current_row, current_column = self.position
-    if initial_move
-      [[current_row + 1, current_column], [current_row + 2, current_column]]
-      
+    possible_moves = []
+    unless initial_move
+      possible_moves << [current_row + 1, current_column]
+      possible_moves << [current_row + 2, current_column]
     else
       #Move 2 times
       #is there a eatable piece diagonal from pawn? if so, move diagonally one square
       #otherwise
-      [current_row + 1, current_column]
-      initial_move = true
+      possible_moves << [current_row + 1, current_column]
     end
-  end
 
-  #Else, move one at a time
+    #initial_move = true
+    possible_moves
+  end
 end
 
 

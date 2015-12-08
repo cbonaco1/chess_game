@@ -14,9 +14,15 @@ class Board
 
 
   def populate_board
-    [0,1,6,7].each do |row_index|
+    [0,1].each do |row_index|
       grid[row_index].each_index do |col_index|
-        grid[row_index][col_index] = Piece.new([row_index, col_index], grid)
+        grid[row_index][col_index] = Piece.new([row_index, col_index], grid, :white)
+      end
+    end
+
+    [6,7].each do |row_index|
+      grid[row_index].each_index do |col_index|
+        grid[row_index][col_index] = Piece.new([row_index, col_index], grid, :black)
       end
     end
   end
