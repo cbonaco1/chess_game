@@ -49,32 +49,40 @@ class SlidingPiece < Piece
       diagonal_moves << [current_row - value, current_column + value]
     end
 
+
     #filters for diagonals that are on board
     diagonal_moves.select! do |array|
       array[0].between?(0,7) && array[1].between?(0,7)
     end
-    (up_down_moves + diagonal_moves).uniq
+    total_possible_moves = (up_down_moves + diagonal_moves).uniq
+
+    total_possible_moves.select {|move| move_dirs(move) }
   end
 end
 
 class Bishop < SlidingPiece
 
+  #filters for ONLY diagonal slides
+  def move_dirs(move)
 
-  def move_dirs
-    #filters for ONLY diagonal slides
+    current_row, current_col = self.position
+
+    #NOT a diagnol move if the row or column is the same as current row/column
+    return false if move.first == current_row || move.last == current_col
+    true
   end
 
-  def moves
-    # super.select {|move| if move_dirs allows moves}
-  end
+  # def moves
+  #   # super.select {|move| if move_dirs allows moves}
+  # end
 
 
 end
 
 class Rook < SlidingPiece
 
-  def move_dirs
-    #filters for horitizon and vertical slides
+  def move_dirs(moves)
+    #filters for only horitizon and vertical slides
   end
 
 
@@ -83,7 +91,8 @@ end
 class Queen < SlidingPiece
 
   #slides in ALL directions
-  def move_dirs
+  #should be left empty
+  def move_dirs(moves)
   end
 
 end
