@@ -43,7 +43,7 @@ class Board
   end
 
   def get_position(pos)
-    
+
   end
 
   #start => [2,4]

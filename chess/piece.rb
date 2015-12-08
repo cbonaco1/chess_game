@@ -1,3 +1,7 @@
+require_relative 'game.rb'
+
+.start_pos
+
 class Piece
   attr_accessor :position
 
@@ -72,17 +76,17 @@ class Bishop < SlidingPiece
     true
   end
 
-  # def moves
-  #   # super.select {|move| if move_dirs allows moves}
-  # end
-
-
 end
 
 class Rook < SlidingPiece
 
-  def move_dirs(moves)
+  def move_dirs(move)
     #filters for only horitizon and vertical slides
+    current_row, current_col = self.position
+
+    #NOT a vertical/horizontal move if the row or column is NOT the same as current row/column
+    return false unless (move.first == current_row || move.last == current_col)
+    true
   end
 
 
@@ -91,8 +95,8 @@ end
 class Queen < SlidingPiece
 
   #slides in ALL directions
-  #should be left empty
-  def move_dirs(moves)
+  def move_dirs(move)
+    true
   end
 
 end
