@@ -254,6 +254,32 @@ class King < SteppingPiece
   end
 end
 
+class Pawn < Piece
+  attr_accessor :initial_move
+
+  def initialize(position, board)
+    super(position, board)
+    @initial_move = false
+  end
+
+  #Can move two steps on first move
+  def moves
+    current_row, current_column = self.position
+    if initial_move
+      [[current_row + 1, current_column], [current_row + 2, current_column]]
+      
+    else
+      #Move 2 times
+      #is there a eatable piece diagonal from pawn? if so, move diagonally one square
+      #otherwise
+      [current_row + 1, current_column]
+      initial_move = true
+    end
+  end
+
+  #Else, move one at a time
+end
+
 
 
 
