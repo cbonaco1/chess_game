@@ -1,12 +1,14 @@
 require_relative 'game.rb'
 
-.start_pos
+
 
 class Piece
   attr_accessor :position
+  attr_reader :board
 
-  def initialize(position)
+  def initialize(position, board)
     @position = position
+    @board = board
   end
 
   #Returns an array of possible locations it can go to
@@ -31,19 +33,79 @@ end
 
 class SlidingPiece < Piece
 
+  def down_moves
+    current_row, current_column = self.position
+    moves = []
+    ((current_row + 1)..7).each do |row_num|
+      if board.grid[row_num][current_column].is_a?(NullPiece)
+        moves << [row_num, current_column]
+      else
+        break
+      end
+    end
+    moves
+  end
+
+  def up_moves
+    current_row, current_column = self.position
+    moves = []
+    (current_row - 1).downto(0) do |row_num|
+      if board.grid[row_num][current_column].is_a?(NullPiece)
+        moves << [row_num, current_column]
+      else
+        break
+      end
+    end
+
+    moves
+  end
+
+  def left_moves
+    current_row, current_column = self.position
+    moves = []
+    (current_column - 1).downto(0) do |col_num|
+      if board.grid[current_row][col_num].is_a?(NullPiece)
+        moves << [current_row, col_num]
+      else
+        break
+      end
+    end
+
+    moves
+  end
+
+  def right_moves
+    current_row, current_column = self.position
+    moves = []
+    ((current_column + 1)..7).each do |col_num|
+      if board.grid[current_row][col_num].is_a?(NullPiece)
+        moves << [current_row, col_num]
+      else
+        break
+      end
+    end
+
+    moves
+  end
+
+  def diagonal_moves
+    current_row, current_column = self.position
+  end
+
+
   #should return an array of places a Piece can move to
   def moves
     #[1, 2]
     current_row, current_column = self.position
-    up_down_moves = []
+    up_down_moves = down_moves + up_moves
     diagonal_moves = []
 
-    (0..7).each do |value|
-      #Up/Down
-      up_down_moves << [value, current_column]
-      #Left/Right
-      up_down_moves << [current_row, value]
-    end
+    # (0..7).each do |value|
+    #   #Up/Down
+    #   up_down_moves << [value, current_column]
+    #   #Left/Right
+    #   up_down_moves << [current_row, value]
+    # end
 
     #diagonal
     (0..7).each do |value|
@@ -60,8 +122,12 @@ class SlidingPiece < Piece
     end
     total_possible_moves = (up_down_moves + diagonal_moves).uniq
 
-    total_possible_moves.select {|move| move_dirs(move) }
+    total_possible_moves.select {|move| move_dirs(move) && !in_the_way?(move) }
   end
+
+
+
+
 end
 
 class Bishop < SlidingPiece
@@ -89,6 +155,10 @@ class Rook < SlidingPiece
     true
   end
 
+  def in_the_way?(move)
+    return false unless move.nil?
+
+  end
 
 end
 
@@ -107,6 +177,7 @@ end
 #############################
 
 class SteppingPiece < Piece
+
 end
 
 class Knight < SteppingPiece
