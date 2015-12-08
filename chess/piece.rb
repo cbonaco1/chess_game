@@ -90,6 +90,22 @@ class SlidingPiece < Piece
 
   def diagonal_moves
     current_row, current_column = self.position
+    diag_moves = [ [-1, 1], [-1, -1], [1, -1], [1, 1] ]
+    possible_moves = []
+
+    diag_moves.each do |diag_move|
+      row_num, col_num = current_row, current_column
+      while row_num < 8 && col_num < 8
+        row_num += diag_move.first
+        col_num += diag_move.last
+        if board.grid[row_num][col_num].is_a?(NullPiece)
+          possible_moves << [row_num, col_num] if row_num >= 0 && col_num >= 0
+        else
+          break
+        end
+      end
+    end
+    possible_moves
   end
 
 
