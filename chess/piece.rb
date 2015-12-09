@@ -4,17 +4,13 @@ require_relative 'game.rb'
 
 class Piece
   attr_accessor :position
-  attr_reader :board
+  attr_reader :grid
 
   def initialize(position, board, color)
     @position = position
-    @board = board
+    #@board = board
+    @grid = board.grid
     @color = color
-  end
-
-  #Returns an array of possible locations it can go to
-  def moves
-    #should return an array of places a Piece can move to
   end
 
   def present?
@@ -53,7 +49,7 @@ class SlidingPiece < Piece
     current_row, current_column = self.position
     moves = []
     ((current_row + 1)..7).each do |row_num|
-      if board.grid[row_num][current_column].is_a?(NullPiece)
+      if grid[row_num][current_column].is_a?(NullPiece)
         moves << [row_num, current_column]
       else
         break
@@ -66,7 +62,7 @@ class SlidingPiece < Piece
     current_row, current_column = self.position
     moves = []
     (current_row - 1).downto(0) do |row_num|
-      if board.grid[row_num][current_column].is_a?(NullPiece)
+      if grid[row_num][current_column].is_a?(NullPiece)
         moves << [row_num, current_column]
       else
         break
@@ -80,7 +76,7 @@ class SlidingPiece < Piece
     current_row, current_column = self.position
     moves = []
     (current_column - 1).downto(0) do |col_num|
-      if board.grid[current_row][col_num].is_a?(NullPiece)
+      if grid[current_row][col_num].is_a?(NullPiece)
         moves << [current_row, col_num]
       else
         break
@@ -94,7 +90,7 @@ class SlidingPiece < Piece
     current_row, current_column = self.position
     moves = []
     ((current_column + 1)..7).each do |col_num|
-      if board.grid[current_row][col_num].is_a?(NullPiece)
+      if grid[current_row][col_num].is_a?(NullPiece)
         moves << [current_row, col_num]
       else
         break
@@ -114,7 +110,7 @@ class SlidingPiece < Piece
       while row_num < 8 && col_num < 8
         row_num += diag_move.first
         col_num += diag_move.last
-        if board.grid[row_num][col_num].is_a?(NullPiece)
+        if grid[row_num][col_num].is_a?(NullPiece)
           possible_moves << [row_num, col_num] if row_num >= 0 && col_num >= 0
         else
           break
@@ -221,7 +217,7 @@ class Knight < SteppingPiece
       # paths << path
 
       paths << path.last if path.length == 3 && path.all? do |position|
-        board.grid[position[0]][position[1]].is_a?(NullPiece)
+        grid[position[0]][position[1]].is_a?(NullPiece)
       end
 
     end
@@ -232,26 +228,28 @@ end
 
 class King < SteppingPiece
   #moves one step in any direction
+
+  KING_MOVES = [
+                [1,1],
+                [1,-1],
+                [1, 0],
+                [0, 1],
+                [0, -1],
+                [-1, 0],
+                [-1, -1],
+                [-1, 1]
+              ]
+
   def moves
     current_row, current_column = self.position
     possible_moves = []
 
-    king_moves = [
-                  [1,1],
-                  [1,-1],
-                  [1, 0],
-                  [0, 1],
-                  [0, -1],
-                  [-1, 0],
-                  [-1, -1],
-                  [-1, 1]
-                ]
 
-    king_moves.each do |move|
+    KING_MOVES.each do |move|
       next_row = current_row + move.first
       next_col = current_column + move.last
       if next_row.between?(0, 7) && next_col.between?(0, 7)
-        if board.grid[next_row][next_col].is_a?(NullPiece)
+        if grid[next_row][next_col].is_a?(NullPiece)
           possible_moves << [next_row, next_col]
         end
       end
