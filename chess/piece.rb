@@ -1,6 +1,6 @@
 require_relative 'game.rb'
 
-
+#Comment added by Christian local
 
 class Piece
   attr_accessor :position
