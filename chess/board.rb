@@ -8,21 +8,27 @@ class Board
     populate_board
   end
 
-  # def [](*position)
-  #   grid[position[0]][position[1]]
-  # end
+  def [](pos)
+    row, col = pos
+    grid[row][col]
+  end
+
+  def []=(pos, value)
+    row, col = pos
+    grid[row][col] = value
+  end
 
 
   def populate_board
     [0,1].each do |row_index|
       grid[row_index].each_index do |col_index|
-        grid[row_index][col_index] = Piece.new([row_index, col_index], grid, :white)
+        grid[row_index][col_index] = Piece.new([row_index, col_index], self, :white)
       end
     end
 
     [6,7].each do |row_index|
       grid[row_index].each_index do |col_index|
-        grid[row_index][col_index] = Piece.new([row_index, col_index], grid, :black)
+        grid[row_index][col_index] = Piece.new([row_index, col_index], self, :black)
       end
     end
   end
@@ -31,16 +37,6 @@ class Board
     @grid.all? do |row|
       row.all? { |piece| piece.present? }
     end
-  end
-
-  def [](pos)
-    row, col = pos
-    grid[row][col]
-  end
-
-  def []=(pos, mark)
-    row, col = pos
-    grid[row][col] = mark
   end
 
   def mark(pos)

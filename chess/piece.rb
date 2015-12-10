@@ -40,7 +40,7 @@ class SlidingPiece < Piece
     diagonal_moves = get_diagonal_moves
 
     total_possible_moves = (vert_hori_moves + diagonal_moves).uniq
-    total_possible_moves.select { |move| move_dirs(move) }
+    #total_possible_moves.select { |move| move_dirs(move) }
 
   end
 
@@ -107,11 +107,11 @@ class SlidingPiece < Piece
 
     diag_moves.each do |diag_move|
       row_num, col_num = current_row, current_column
-      while row_num < 8 && col_num < 8
+      while row_num.between?(0, 7) && col_num.between?(0, 7)
         row_num += diag_move.first
         col_num += diag_move.last
         if grid[row_num][col_num].is_a?(NullPiece)
-          possible_moves << [row_num, col_num] if row_num >= 0 && col_num >= 0
+          possible_moves << [row_num, col_num] #if row_num >= 0 && col_num >= 0
         else
           break
         end
